@@ -1,6 +1,10 @@
-import copy
 import time
 
+'''
+Classe modelo dos processos
+identification = ID de controle de processos
+isCoordiantor = eh coordenador?
+'''
 class Process:
 	
 	def __init__(self, identification, isCoordiantor):
@@ -25,14 +29,20 @@ class Process:
 	def isCoordiantor(self, isCoordiantor):
 		self.__isCoordiantor = isCoordiantor
 
+	'''
+	Envio de mensagem para o coordenador
+	'''
 	def sendRequisition(self, coordiantor):
 		status = False
 		if coordiantor is not None:
-			status = coordiantor.receiveRequisition(self.identification)
+			status = coordiantor.receiveRequisition(coordiantor.identification, self.identification)
 
 		print("%s - Fim da requisição - status: %s" % (time.ctime(time.time()), str(status)))
 		return status
 
-	def receiveRequisition(self, origin):
-		print("%s - Requisição do processo %d recebida" % (time.ctime(time.time()), int(origin)))
+	'''
+	Recebimento de mensagem informando a origem da requisicao
+	'''
+	def receiveRequisition(self, coordiantor, origin):
+		print("%s - Requisição do processo %d recebida pelo coordenador %d" % (time.ctime(time.time()), int(origin), int(coordiantor)))
 		return True

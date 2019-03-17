@@ -1,3 +1,6 @@
+import copy
+import time
+
 class Process:
 	
 	def __init__(self, identification, isCoordiantor):
@@ -22,15 +25,14 @@ class Process:
 	def isCoordiantor(self, isCoordiantor):
 		self.__isCoordiantor = isCoordiantor
 
-	#Method Abstract
 	def sendRequisition(self, coordiantor):
+		status = False
 		if coordiantor is not None:
-			return coordiantor.receiveRequisition(self.identification)
+			status = coordiantor.receiveRequisition(self.identification)
 
-		print("Fim da requisição")
-		return False
+		print("%s - Fim da requisição - status: %s" % (time.ctime(time.time()), str(status)))
+		return status
 
 	def receiveRequisition(self, origin):
-		print("Requisição do processo %d recebida" % origin)
+		print("%s - Requisição do processo %d recebida" % (time.ctime(time.time()), int(origin)))
 		return True
-

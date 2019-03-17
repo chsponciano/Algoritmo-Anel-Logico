@@ -10,14 +10,20 @@ class RequestProcess(LogicalRing):
 		while(True):
 			time.sleep(self.constTimeRequest)
 
-			self.threadLock.acquire()
-			print("RequestProcess")
+			LogicalRing.threadLock.acquire()
 
 			if not self.isEmptyProcess():
 				index = random.randrange(self.lenActiveProcesses())
 				process = self.getProcess(index)
-				coordiantor = (c for c in self.getProcessAll() if c.isCoordiantor)
-				print("Processo %d efetuado requisição")
+				coordiantor = None
+				for c in self.getProcessAll():
+					if c.isCoordiantor:
+						coordiantor = c
+
+				print("%s - Processo %d efetuado requisição" % (time.ctime(time.time()), process.identification))
 				status = process.sendRequisition(coordiantor)
 
-			self.threadLock.release()
+				if not status:
+					self.holdElection()
+
+			LogicalRing.threadLock.release()

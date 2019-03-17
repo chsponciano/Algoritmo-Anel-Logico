@@ -5,14 +5,16 @@ import operator
 
 class LogicalRing(threading.Thread):
 	
+	activeProcesses = []
+	threadLock = threading.Lock()
+	counter = 0
+
 	def __init__(self):
 		threading.Thread.__init__(self)
-		self.__activeProcesses = []
 		self.__constTimeCreate = 3#30
 		self.__constTimeRequest = 2.5#25
 		self.__constTimeInactivateCoordiantor = 10#100
 		self.__constTimeInactivateProcess = 8#80
-		self.threadLock = threading.Lock()
 
 	@property
 	def constTimeCreate(self):
@@ -31,44 +33,43 @@ class LogicalRing(threading.Thread):
 		return self.__constTimeInactivateProcess
 
 	def isEmptyProcess(self):
-		return (len(self.__activeProcesses) == 0)
+		return (len(LogicalRing.activeProcesses) == 0)
 
 	def nextProcess(self):
-		if self.isEmptyProcess():
-			return 1
-		return int(self.__activeProcesses[-1].identification) + 1
+		LogicalRing.counter += 1
+		return LogicalRing.counter
 
 	def addProcess(self, isCoordiantor):
-		self.__activeProcesses.append(Process(self.nextProcess(), isCoordiantor))
+		LogicalRing.activeProcesses.append(Process(self.nextProcess(), isCoordiantor))
 
 	def removeProcess(self, index):
-		self.__activeProcesses.pop(index)
+		LogicalRing.activeProcesses.pop(index)
 
 	def getProcess(self, index):
-		return self.__activeProcesses[index]
+		return LogicalRing.activeProcesses[index]
 
 	def getProcessAll(self):
-		return self.__activeProcesses
+		return LogicalRing.activeProcesses
 
 	def lenActiveProcesses(self):
-		return len(self.__activeProcesses)
+		return len(LogicalRing.activeProcesses)
 
 	def holdElection(self):
-		print("Iniciado Eleições")
+		print("%s - Iniciado Eleições" % time.ctime(time.time()))
 		
-		newCoordiantor = self.__activeProcesses.sort(key = operator.attrgetter(identification), reverse = True)[0]
+		LogicalRing.activeProcesses.sort(key = operator.attrgetter('identification'), reverse = True)
+		newCoordiantor = LogicalRing.activeProcesses[0]
 		status = self.updateCoordiantor(newCoordiantor)
 
 		if status:
-			print("Eleição concluida! Novo coordenador %d" % newCoordiantor.identification)
+			print("%s - Eleição concluida! Novo coordenador %d" % (time.ctime(time.time()), newCoordiantor.identification))
 		else:
-			print("Eleição falhou!")
+			print("%s - Eleição falhou!" % (time.ctime(time.time())))
 
 	def updateCoordiantor(self, newCoordiantor):
-		for c in self.__activeProcesses:
-			if c.identification == newCoordiantor.identification:
-				c.isCoordiantor(True)
-			else:
-				c.isCoordiantor(False)
+		if newCoordiantor is None:
+			return False
 
+		for c in LogicalRing.activeProcesses:
+			c.isCoordiantor = (c.identification == newCoordiantor.identification)
 		return True

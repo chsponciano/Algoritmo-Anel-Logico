@@ -21,11 +21,7 @@ from requestProcess import RequestProcess
 from inactivateCoordiantor import InactivateCoordiantor
 from inactivateProcess import InactivateProcess
 
-threads = []
-#threads.append(CreateProcess())
-#threads.append(RequestProcess())
-#threads.append(InactivateCoordiantor())
-threads.append(InactivateProcess())
+threads = [CreateProcess(), RequestProcess(), InactivateCoordiantor(), InactivateProcess()]
 
 for t in threads:
 	t.start()

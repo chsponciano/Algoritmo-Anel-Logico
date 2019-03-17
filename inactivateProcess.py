@@ -8,17 +8,22 @@ class InactivateProcess(LogicalRing):
 
 	def run(self):
 		while(True):
-			self.threadLock.acquire()
-
-			print("InactivateProcess")
-			if not self.isEmptyProcess():
-				index = random.randrange(self.lenActiveProcesses())
-				process = self.getProcess(index)
-
-				if process is not None and not process.isCoordiantor:
-					self.removeProcess(index)
-					print('Processo %d inativado' % self.getProcess(-1).identification)
-
-				self.threadLock.release()
-				
 			time.sleep(self.constTimeInactivateProcess)
+			
+			LogicalRing.threadLock.acquire()
+
+			if not self.isEmptyProcess():
+				self.inativate()
+
+			LogicalRing.threadLock.release()
+				
+
+	def inativate(self):
+		index = random.randrange(self.lenActiveProcesses())
+		process = self.getProcess(index)
+
+		if process is not None and not process.isCoordiantor:
+			self.removeProcess(index)
+			print('%s - Processo %d inativado' % (time.ctime(time.time()), process.identification))
+		else:
+			self.inativate()

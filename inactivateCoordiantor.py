@@ -10,19 +10,18 @@ class InactivateCoordiantor(LogicalRing):
     	while(True):
             time.sleep(self.constTimeInactivateCoordiantor)
 
-            self.threadLock.acquire()
-            print("InactivateCoordiantor")
+            LogicalRing.threadLock.acquire()
             coordiantor = None
             index = 0
 
             for c in self.getProcessAll():
                 if c.isCoordiantor:
-                    print(c)
                     coordiantor = c
                     break
                 index += 1
+
             if coordiantor is not None:
                 self.removeProcess(index)
-                print("Coordenador %d inativado" % index)
+                print("%s - Coordenador %d inativado" % (time.ctime(time.time()), coordiantor.identification))
 
-            self.threadLock.release()
+            LogicalRing.threadLock.release()

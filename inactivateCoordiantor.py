@@ -12,7 +12,7 @@ class InactivateCoordiantor(LogicalRing):
     def run(self):
     	while(True):
             #Controle de tempo com base na constante
-            time.sleep(self.constTimeInactivateCoordiantor)
+            time.sleep(LogicalRing.constTimeInactivateCoordiantor())
 
             #Bloqueia a entrada de novos processos
             LogicalRing.threadLock.acquire()

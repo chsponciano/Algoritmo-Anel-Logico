@@ -13,7 +13,7 @@ class RequestProcess(LogicalRing):
 	def run(self):
 		while(True):
 			#Controle de tempo com base na constante
-			time.sleep(LogicalRing.constTimeRequest)
+			time.sleep(LogicalRing.constTimeRequest())
 
 			#Bloqueia a entrada de novos processos
 			LogicalRing.threadLock.acquire()

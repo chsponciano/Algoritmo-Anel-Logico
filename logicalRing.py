@@ -19,10 +19,17 @@ class LogicalRing(threading.Thread):
 	counter = 0
 	
 	#Constantes de tempo das acoes
-	constTimeCreate = 3#30
-	constTimeRequest = 2.5#25
-	constTimeInactivateCoordiantor = 10#100
-	constTimeInactivateProcess = 8#80
+	@staticmethod
+	def constTimeCreate(): return 3 #30
+
+	@staticmethod
+	def constTimeRequest(): return 2.5 #25
+
+	@staticmethod
+	def constTimeInactivateCoordiantor(): return 10 #100
+
+	@staticmethod
+	def constTimeInactivateProcess(): return 8 #80
 
 	def __init__(self):
 		threading.Thread.__init__(self)

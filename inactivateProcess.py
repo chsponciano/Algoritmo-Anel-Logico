@@ -13,7 +13,7 @@ class InactivateProcess(LogicalRing):
 	def run(self):
 		while(True):
 			#Controle de tempo com base na constante
-			time.sleep(self.constTimeInactivateProcess)
+			time.sleep(LogicalRing.constTimeInactivateProcess())
 			
 			#Bloqueia a entrada de novos processos
 			LogicalRing.threadLock.acquire()

@@ -30,4 +30,4 @@ class CreateProcess(LogicalRing):
 			LogicalRing.threadLock.release()
 
 			#Controle de tempo com base na constante
-			time.sleep(LogicalRing.constTimeCreate)
+			time.sleep(LogicalRing.constTimeCreate())
